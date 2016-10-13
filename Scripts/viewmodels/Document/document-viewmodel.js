@@ -19,6 +19,7 @@
         _this.listOrganization = ko.observableArray(listorganization);
         _this.arrUser = ko.observableArray([]);
 
+        _this.filesinput = "";
 
         _this.listDocument = ko.observableArray([]);
         _this.listfiles = ko.observableArray([]);
@@ -139,26 +140,27 @@
         _this.files = ko.observableArray([]);
         _this.fileSelect = function (elemet, event) {
             var files = event.target.files;// FileList object
+            _this.filesinput = files;
+            //console.log(_this.filesinput);
+            //// Loop through the FileList and render image files as thumbnails.
+            //for (var i = 0, f; f = files[i]; i++) {
 
-            // Loop through the FileList and render image files as thumbnails.
-            for (var i = 0, f; f = files[i]; i++) {
+            //    // Only process image files.
+            //    //if (!f.type.match('image.*')) {
+            //    //    continue;
+            //    //}
 
-                // Only process image files.
-                //if (!f.type.match('image.*')) {
-                //    continue;
-                //}
+            //    var reader = new FileReader();
 
-                var reader = new FileReader();
-
-                // Closure to capture the file information.
-                reader.onload = (function (theFile) {
-                    return function (e) {
-                        _this.files.push(new FileModel(escape(theFile.name), e.target.result));
-                    };
-                })(f);
-                // Read in the image file as a data URL.
-                reader.readAsDataURL(f);
-            }
+            //    // Closure to capture the file information.
+            //    reader.onload = (function (theFile) {
+            //        return function (e) {
+            //            _this.files.push(new FileModel(escape(theFile.name), e.target.result));
+            //        };
+            //    })(f);
+            //    // Read in the image file as a data URL.
+            //    reader.readAsDataURL(f);
+            //}
         };
 
         var FileModel = function (name, src) {
@@ -173,39 +175,81 @@
             }
             _this.isSending(true);
 
-            //int type, string eid, string documentcode,
-            //string documentname, string documentdes, string documentdate, string documentdateaction, string documenttype,
-            //string documentdepartment, string documentorganization, string documentuser, string filedirect
+            var datainput = new FormData();
+            var files = _this.filesinput;
+            for (var x = 0; x < files.length; x++) {
+                datainput.append("file" + x, files[x]);
+            }
 
-            _this.model.update({
-                type: _this.doctype, eid: _this.eid(), documentcode: _this.documentcode(), documentname: _this.documentname(),
-                documentdes: _this.documentdes(), documentdate: _this.documentdate(), documentdateaction: _this.documentdateaction(),
-                documenttype: _this.documenttype(),documentdepartment: _this.documentdepartment(), documentorganization: _this.documentorganization(),
-                documentuser: _this.documentuser(), filedirect: "", documentdatesent: _this.documentdatesent()
-                //name: _this.name(), filename: _this.filename(), filedescription: _this.filedescription(), filepath: _this.filepath(),
-                //filetype: _this.filetype(), filedirect: _this.filedirect(), filedatecreated: _this.filedatecreated()
-            }, function (data) {
-                _this.isSending(false);
-                if ($.isArray(data)) {
-                    toastr.error(data.join("<br>"));
-                    return;
-                }
-                if (data === -2) {
-                    toastr.warning(_this.common.stringFormat(window.resources.common.message.alreadyExist, window.resources.admin.salon.title.infoWindowTitle));
-                    return;
-                }
-                if (data === -3) {
-                    toastr.warning(_this.common.stringFormat(window.resources.common.message.notExist, window.resources.admin.salon.title.stateProvince));
-                    return;
-                }
-                if (data > 0) {
+            $.ajax({
+                type: "POST",
+                url: '/Admin/Document/Update?type=' + _this.doctype + '&eid=' + _this.eid() + '&documentcode=' + _this.documentcode()
+                    + '&documentname=' + _this.documentname() + '&documentdes=' + _this.documentdes()
+                    + '&documentdate=' + _this.documentdate() + '&documentdateaction=' + _this.documentdateaction()
+                    + '&documenttype=' + _this.documenttype() + '&documentdepartment=' + _this.documentdepartment()
+                    + '&documentorganization=' + _this.documentorganization()
+                    + '&documentuser=' + _this.documentuser() + '&documentdatesent=' + _this.documentdatesent()
+                ,
+                contentType: false,
+                processData: false,
+                data: datainput,
+                success: function (result) {
+                    _this.isSending(false);
+
                     toastr.success('Succefull');
                     _this.resetForm();
-                    //_this.updateCallback();
                     $("#addOrEditForm").modal('hide');
                     _this.search(_this.currentPage);
+
+                    //if ($.isArray(result)) {
+                    //    toastr.error(result.join("<br>"));
+                    //    return;
+                    //}
+                    //if (result === -2) {
+                    //    toastr.warning(_this.common.stringFormat(window.resources.common.message.alreadyExist, window.resources.admin.salon.title.infoWindowTitle));
+                    //    return;
+                    //}
+                    //if (result === -3) {
+                    //    toastr.warning(_this.common.stringFormat(window.resources.common.message.notExist, window.resources.admin.salon.title.stateProvince));
+                    //    return;
+                    //}
+                    //if (result > 0) {
+                    //    toastr.success('Succefull');
+                    //    _this.resetForm();
+                    //    //_this.updateCallback();
+                    //    $("#addOrEditForm").modal('hide');
+                    //    _this.search(_this.currentPage);
+                    //}
                 }
             });
+
+            //_this.model.update({
+            //    type: _this.doctype, eid: _this.eid(), documentcode: _this.documentcode(), documentname: _this.documentname(),
+            //    documentdes: _this.documentdes(), documentdate: _this.documentdate(), documentdateaction: _this.documentdateaction(),
+            //    documenttype: _this.documenttype(),documentdepartment: _this.documentdepartment(), documentorganization: _this.documentorganization(),
+            //    documentuser: _this.documentuser(), documentdatesent: _this.documentdatesent()
+            //}, datainput, function (data) {
+            //    _this.isSending(false);
+            //    if ($.isArray(data)) {
+            //        toastr.error(data.join("<br>"));
+            //        return;
+            //    }
+            //    if (data === -2) {
+            //        toastr.warning(_this.common.stringFormat(window.resources.common.message.alreadyExist, window.resources.admin.salon.title.infoWindowTitle));
+            //        return;
+            //    }
+            //    if (data === -3) {
+            //        toastr.warning(_this.common.stringFormat(window.resources.common.message.notExist, window.resources.admin.salon.title.stateProvince));
+            //        return;
+            //    }
+            //    if (data > 0) {
+            //        toastr.success('Succefull');
+            //        _this.resetForm();
+            //        //_this.updateCallback();
+            //        $("#addOrEditForm").modal('hide');
+            //        _this.search(_this.currentPage);
+            //    }
+            //});
             return;
         };
 

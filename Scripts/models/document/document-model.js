@@ -17,6 +17,8 @@ define(["require", "exports", "amplify"], function (require, exports, amplify) {
     });
     amplify.request.define("Update", "ajax", {
         url: "/Admin/Document/Update",
+        contentType: false,
+        processData: false,
         dataType: "json",
         type: "POST"
     });
@@ -43,8 +45,8 @@ define(["require", "exports", "amplify"], function (require, exports, amplify) {
                 callback(result);
             });
         };
-        DocumentModel.prototype.update = function (model, callback) {
-            amplify.request("Update", model, function (result) {
+        DocumentModel.prototype.update = function (model, data, callback) {
+            amplify.request("Update", { model: model, data: data }, function (result) {
                 callback(result);
             });
         };
