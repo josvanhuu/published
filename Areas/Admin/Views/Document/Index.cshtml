@@ -14,18 +14,28 @@
             <td class="text-center" data-bind="text: $root.formatDate(DocumentDateAction)"></td>
             <!--ko if: $root.doctype == 0-->
             <td data-bind="text: DocumentDepartment!= null ? $root.getDocumentDepartment(DocumentDepartment) : '--'"></td>
-            <td class="text-center" data-bind="text: $root.formatDate(DocumentDateSent)"></td>
+            <td class="text-center" data-bind="text: $root.formatDate(DocumentDate)"></td>
             <!--/ko-->
             <!--ko if: $root.doctype == 1-->
             <td data-bind="text: DocumentDepartmentAction != null ? $root.getDocumentDepartment(DocumentDepartmentAction) : '--'"></td>
-            <td class="text-center" data-bind="text: $root.formatDate(DocumentDateSent)"></td>
+            <td class="text-center" data-bind="text: $root.formatDate(DocumentDate)"></td>
+            <!--/ko-->
             <td class="text-center">
+                @*<a data-bind="attr: { href: DocumentCode, title: DocumentCode }">View PDF</a>*@
+                @*href="http://docs.google.com/gview?url=https://partners.adobe.com/public/developer/en/xml/AdobeXMLFormsSamples.pdf&embedded=true"*@
+                <a data-original-title="View" data-placement="top" class="btn btn-sm btn-success tooltips" href="javascript:;" data-bind="click: $parent.view"><i class="fa fa-eye"></i></a>
+                @*<a data-original-title="Dowload" data-placement="top" class="btn btn-sm btn-success tooltips" href="javascript:;" data-bind="click: $parent.download"><i class="fa fa-download"></i></a>*@
                 <a data-original-title="Edit" data-placement="top" class="btn btn-sm btn-primary tooltips" href="javascript:;" data-bind="click: $parent.showEdit"><i class="fa fa-edit"></i></a>
                 <a data-original-title="Delete" data-placement="top" class="btn btn-sm btn-danger tooltips" href="javascript:;" data-bind="click: $parent.delete"><i class="fa fa-times fa fa-white"></i></a>
             </td>
-            <!--/ko-->
         </tr>
     </script>
+
+    <script type="text/template" id="documentfileTemplate">
+        @*<iframe data-bind="attr: { src: VituarlPath, title: Name }"></iframe>*@
+    </script>
+
+
     <script type="text/javascript">
         var naviactive = @ViewBag.type == 0 ? "document" : "documentto";
         var doctype = @ViewBag.type;
@@ -34,7 +44,7 @@
         var listuser = @Html.Raw(ViewBag.listuser);
         var listorganization = @Html.Raw(ViewBag.listorganizations);
         var listdocument = @Html.Raw(ViewBag.listdocument);
-        require(["dropzone", "viewmodels/Document/document-viewmodel", "jqueryValidate"]);
+        require(["viewmodels/Document/document-viewmodel", "jqueryValidate"]);
         //"/assets/uploadfile/js/jquery.ui.widget.js",
         //"/assets/uploadfile/js/jquery.knob.js",
         //"/assets/uploadfile/js/jquery.iframe-transport.js",
@@ -49,34 +59,23 @@
         <ul class="breadcrumb">
             <li>
                 <i class="ace-icon fa fa-home home-icon"></i>
-                <a href="#">Home</a>
             </li>
-
-            <li>
-                <a href="#">Cấu hình</a>
-            </li>
-            <li class="active">Công Văn</li>
+            <li class="active" style="text-transform:uppercase" data-bind="text: title"></li>
         </ul>
     </div>
 
     <div class="page-content">
         <div class="page-header">
             <div class="clearfix">
-                <div class="pull-left">
-
-                    <h1 data-bind="text: title">
-                        @*Quản Lý Công Văn*@
-                    </h1>
-
-                </div>
-                <div class="pull-right tableTools-container">
+                @*<div class="pull-left">
+                        <h1 data-bind="text: title"></h1>
+                    </div>*@
+                <div class="pull-left tableTools-container">
                     <p>
-                        <!--ko if: $root.doctype == 1-->
                         <button data-bind="click: showAdd" class="btn btn-white btn-success btn-bold">
                             <i class="ace-icon fa fa-plus bigger-120 green"></i>
                             Thêm mới
                         </button>
-                        <!--/ko-->
                     </p>
                 </div>
             </div>
@@ -85,8 +84,7 @@
         <!-- PAGE CONTENT BEGINS -->
         <div class="row">
             <div class="col-xs-12">
-                <div class="table-header">
-                    Danh sách công văn
+                <div class="table-header" data-bind="text: 'Danh sách ' + title">
                 </div>
                 <!-- div.dataTables_borderWrap -->
                 <div>
@@ -106,8 +104,8 @@
                             <!--ko if: $root.doctype == 1-->
                             <th class="text-center">Phòng ban xử lý</th>
                             <th class="text-center">Ngày gửi Công Văn</th>
-                            <th class="text-center"><i class="fa fa-cog"></i></th>
                             <!--/ko-->
+                            <th class="text-center"><i class="fa fa-cog"></i></th>
                         </tr>
                         <tbody data-bind="template: { name: 'documentTemplate', foreach: $root.listDocument }"></tbody>
                     </table>
@@ -115,7 +113,7 @@
             </div>
         </div>
         <!-- PAGE CONTENT ENDS -->
-        <!-- Modal -->
+        <!-- Modal Insert/Update Form -->
         <div class="modal fade" id="addOrEditForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -126,7 +124,7 @@
                         <h4 class="modal-title" id="myModalLabel">Công Văn</h4>
                     </div>
                     <div class="modal-body">
-                        <form class="form-horizontal" role="form" method="post" action="/Admin/Document/Update" enctype="multipart/form-data">
+                        <form class="form-horizontal" role="form" method="post" action="/Admin/Document/DocumentAction" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Kí hiệu </label>
                                 <div class="col-sm-9">
@@ -184,7 +182,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> Ngày kí </label>
                                 <div class="col-sm-9">
-                                    <input type="date" data-bind="value: documentdate" class="form-control" />
+                                    <input id="datetxt" type="date" data-bind="value: documentdate" class="form-control" />
                                 </div>
                             </div>
                             <div class="space-4"></div>
@@ -217,47 +215,55 @@
                             <div class="form-group">
                                 <div class="widget-box">
                                     <div class="widget-header">
-                                        <h4 class="widget-title">Custom File Input</h4>
-
-                                        <div class="widget-toolbar">
-                                            @*<a href="#" data-action="collapse">
-                                                    <i class="ace-icon fa fa-chevron-up"></i>
-                                                </a>
-
-                                                <a href="#" data-action="close">
-                                                    <i class="ace-icon fa fa-times"></i>
-                                                </a>*@
-                                        </div>
+                                        <h4 class="widget-title">Tải file đính kèm</h4>
                                     </div>
 
                                     <div class="widget-body">
                                         <div class="widget-main">
-                                            @*<div id="drop">
-                                                    Drop Here
-
-                                                    <a>Browse</a>
-                                                    <input type="file" name="file1" id="myfile" multiple />
-                                                </div>
-
-                                                <ul>
-                                                    <-- The file uploads will be shown here -->
-                                                </ul>*@
                                             <div class="form-group">
                                                 <div class="col-xs-12">
-                                                    @*<input type="file" multiple="multiple" id="id-input-file-2" data-bind="event: { change: changefile }" name="file1" />*@
+                                                    <div class="fileuploadButton cursor-pointer btn-group mb8">
+                                                        <input type="file" id="files" name="files[]" multiple data-bind="event:{change: $root.fileSelect}" />
+                                                        <button type="button" class="btn btn-primary btn-sm">
+                                                            <i class="fa fa-pulse fa-spinner" data-bind="visible: isUploading" style="display: none;"></i>
+                                                            <i class="fa fa-upload" data-bind="visible: !isUploading()"></i> Tải lên tệp tin
+                                                        </button>
+                                                    </div>
 
-                                                    <input type="file" id="files" name="files[]" multiple data-bind="event:{change: $root.fileSelect}" />
                                                     <output id="list"></output>
-
-                                                    <ul>
-                                                        <!-- ko foreach: files-->
-                                                        <li>
-                                                            <span data-bind="text: name"></span>: <img class="thumb" data-bind="attr: {'src': src, 'title': name}" />
-                                                        </li>
-                                                        <!-- /ko -->
-                                                    </ul>
-
-
+                                                    <table class="table table-bordered mb0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="center w50">STT</th>
+                                                                <th class="w50"></th>
+                                                                <th class="center">Tập tin đính kèm</th>
+                                                                <th class="center w100">Dung lượng</th>
+                                                                <th class="center w50"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- ko if: files().length === 0 --><!-- /ko -->
+                                                            <!-- ko if: files().length > 0 -->
+                                                            <!-- ko foreach: files-->
+                                                            <tr>
+                                                                <td class="center w50" data-bind="text: $index() + 1">1</td>
+                                                                <td class="center">
+                                                                    <i data-bind="attr: {class: 'pull-left fa fa-file-'+ format}"></i>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="task-upload-item">
+                                                                        <h6 class="media-heading pull-left" data-bind="text: name"></h6>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="text-right" data-bind="text: SizeString"></td>
+                                                                <td class="center">
+                                                                    <a href="javascript:;" class="btn btn-xs btn-bricky" @*data-bind="click: $root.removePosmAttachment"*@><i class="fa fa-times"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                            <!-- /ko -->
+                                                            <!-- /ko -->
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -266,21 +272,50 @@
                             </div>
                             <div class="space-4"></div>
                             <div class="modal-footer">
-                                @*<button type="submit" class="btn btn-primary" name="command" value="upload" data-bind="disable: isSending, click: save">Lưu</button>*@
                                 <button type="submit" class="btn btn-primary" data-bind="disable: isSending, click: save">
                                     <i class="fa fa-spinner fa-pulse" data-bind="visible: isSending"></i>
                                     <i class="fa fa-save" data-bind="visible: !isSending()"></i>&nbsp;
                                     Lưu
                                 </button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                                @*<button type="submit" class="btn btn-primary" name="command" value="upload">Lưu</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>*@
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Modal Insert/Update Form -->
+        <div class="modal fade" id="viewDocumentForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Xem Công Văn</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!-- ko foreach: filesview-->
+                        <p>
+                            <span data-bind="text: Name"> </span>
+                            <iframe data-bind="attr: { href: 'http://localhost:13869' + VituarlPath, title: Name }"></iframe>
+                        </p>
+                        <div class="space-4"></div>
+                        <!-- /ko -->
+                    </div>
+                    <div class="modal-footer">
+                        @*<button type="submit" class="btn btn-primary" data-bind="disable: isSending, click: save">
+                                <i class="fa fa-spinner fa-pulse" data-bind="visible: isSending"></i>
+                                <i class="fa fa-save" data-bind="visible: !isSending()"></i>&nbsp;
+                                Lưu
+                            </button>*@
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div><!-- /.page-content -->
 </div>
 @*</div>*@<!-- /.main-content -->

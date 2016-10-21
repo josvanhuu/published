@@ -1,10 +1,10 @@
 ﻿
 @{
-    ViewBag.Title = "Tìm kiếm Công Văn";
+    ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-@Styles.Render("~/documentsearch/css")
+@Styles.Render("~/documentsearch/css");
 
 @section scripts {
     <script type="text/template" id="searchdocumentTemplate">
@@ -24,11 +24,13 @@
     </script>
     <script type="text/javascript">
         var naviactive = "searchdocument";
+
         var listdocumenttype = @Html.Raw(ViewBag.listdocumenttype);
         var listdepartment = @Html.Raw(ViewBag.listdepartment);
         var listorganization = @Html.Raw(ViewBag.listorganizations);
         var listdocument = @Html.Raw(ViewBag.listdocument);
-        require(["viewmodels/Document/document-search-viewmodel", "jqueryValidate"]);
+
+        require(["viewmodels/Document/document-search-viewmodel", "jqueryValidate"]); //"maskedinput"
     </script>
 }
 <div class="main-content">
@@ -54,41 +56,50 @@
                         <div class="widget-body">
                             <div class="widget-main no-padding">
 
-                                <form class="form-search form-inline" role="form">
+                                <form data-bind="submit: FormSearch" class="form-search form-inline" role="form">
                                     <fieldset>
                                         <div class="col-md-3">
                                             <div class="input-group col-md-12">
 
-                                                <input type="text" class="form-control search-query" placeholder="Kí hiệu">
+                                                <input type="text" data-bind="value: code" class="form-control search-query" placeholder="Kí hiệu">
                                                 <span class="input-group-btn">
-                                                    <button type="button" class="btn btn-purple btn-sm">
+                                                    <button type="submit" class="btn btn-purple btn-sm">
                                                         <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
                                                     </button>
                                                 </span>
                                             </div>
                                             <hr>
                                         </div>
-
+                                        
                                         <div class="col-md-3">
                                             <div class="input-group col-md-12">
-                                                <input type="text" class="form-control search-query" placeholder="Từ khóa">
+                                                <input type="text" data-bind="value: keyword" class="form-control search-query" placeholder="Từ khóa">
                                                 <span class="input-group-btn">
-                                                    <button type="button" class="btn btn-purple btn-sm">
+                                                    <button type="submit" class="btn btn-purple btn-sm">
                                                         <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
                                                     </button>
                                                 </span>
                                             </div>
                                             <hr>
                                         </div>
-
+                                        
                                         <div class="col-md-3">
                                             <div class="input-group col-md-12">
-                                                @*<span class="input-group-addon">
-                                                        <i class="ace-icon fa fa-check"></i>
-                                                    </span>*@
-
                                                 <select data-bind="value: documenttype, options: listDocumentType, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn loại Văn Bản'" class="form-control" id="form-field-select-1"></select>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                        
+                                        <div class="col-md-3">
+                                            <div class="input-group col-md-12">
+                                                <select data-bind="value: documentdepartment, options: listDepartment, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn phòng ban'" class="form-control"></select>
+                                            </div>
+                                            <hr>
+                                        </div>
 
+                                        @*<div class="col-md-3">
+                                            <div class="input-group col-md-12">
+                                                <select data-bind="value: documentdepartment, options: listDepartment, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn phòng ban'" class="form-control"></select>
                                             </div>
                                             <hr>
                                         </div>
@@ -100,33 +111,19 @@
                                             <hr>
                                         </div>
 
-                                        @*<div class="col-md-3">
-                                                <div class="input-group col-md-12">
-                                                    <select data-bind="value: documentdepartment, options: listDepartment, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn phòng ban'" class="form-control"></select>
-                                                </div>
-                                                <hr>
+                                        <div class="col-md-3">
+                                            <div class="input-group col-md-12">
+                                                <select data-bind="value: documentdepartment, options: listDepartment, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn phòng ban'" class="form-control"></select>
                                             </div>
+                                            <hr>
+                                        </div>
 
-                                            <div class="col-md-3">
-                                                <div class="input-group col-md-12">
-                                                    <select data-bind="value: documentdepartment, options: listDepartment, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn phòng ban'" class="form-control"></select>
-                                                </div>
-                                                <hr>
+                                        <div class="col-md-3">
+                                            <div class="input-group col-md-12">
+                                                <select data-bind="value: documentdepartment, options: listDepartment, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn phòng ban'" class="form-control"></select>
                                             </div>
-
-                                            <div class="col-md-3">
-                                                <div class="input-group col-md-12">
-                                                    <select data-bind="value: documentdepartment, options: listDepartment, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn phòng ban'" class="form-control"></select>
-                                                </div>
-                                                <hr>
-                                            </div>
-
-                                            <div class="col-md-3">
-                                                <div class="input-group col-md-12">
-                                                    <select data-bind="value: documentdepartment, options: listDepartment, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn phòng ban'" class="form-control"></select>
-                                                </div>
-                                                <hr>
-                                            </div>*@
+                                            <hr>
+                                        </div>*@
 
                                     </fieldset>
                                 </form>

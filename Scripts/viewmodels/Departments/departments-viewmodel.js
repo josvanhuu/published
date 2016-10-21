@@ -68,6 +68,7 @@ define(["require", "exports", "jquery", "knockout", "toastr", "sweetalert", "../
         $(function () {
             //_this.listdeparments(listdeparments);
             _this.totalPage = Math.ceil(_this.count / _this.recordPerPage);
+            $("#sumarypager").html(totalRecord === 0 ? this.common.stringFormat(window.resources.common.pager.noRecord, this.title) : this.common.stringFormat(window.resources.common.pager.description, from, to, totalRecord, this.title));
             $("#pager").pager({ pagenumber: 1, pagecount: _this.totalPage, totalrecords: _this.count, buttonClickCallback: _this.pageClickSearch });
         });
 
@@ -134,6 +135,7 @@ define(["require", "exports", "jquery", "knockout", "toastr", "sweetalert", "../
                 //_this.isSearching(false);
                 _this.listdeparments(data.listDepartments);
                 _this.totalPage = Math.ceil(data.totalRecord / _this.recordPerPage);
+                $("#sumarypager").html(totalRecord === 0 ? this.common.stringFormat(window.resources.common.pager.noRecord, this.title) : this.common.stringFormat(window.resources.common.pager.description, from, to, totalRecord, this.title));
                 $("#pager").pager({ pagenumber: _this.currentPage, pagecount: _this.totalPage, totalrecords: data.totalRecord, buttonClickCallback: _this.pageClickSearch });
             });
         };

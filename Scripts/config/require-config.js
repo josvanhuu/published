@@ -37,8 +37,7 @@ require.config({
         globalize: "globalize.0.1.3/cultures/globalize.culture." + window.currentCulture,
         resourceCommon: "resources/common.vi-VN",
         //resourceAdmin: `resources/admin/admin${window.currentCulture === "en-US" ? "" : `.${window.currentCulture}`}`,
-        validate: "common/validate",
-        dropzone: "/Scripts/plugins/dropzone/dropzone-amd-module"
+        validate: "common/validate"        
     },
     shim: {
         bootstrap: ["jquery"],

@@ -17,8 +17,6 @@ define(["require", "exports", "amplify"], function (require, exports, amplify) {
     });
     amplify.request.define("Update", "ajax", {
         url: "/Admin/Document/Update",
-        contentType: false,
-        processData: false,
         dataType: "json",
         type: "POST"
     });
@@ -27,16 +25,32 @@ define(["require", "exports", "amplify"], function (require, exports, amplify) {
         dataType: "json",
         type: "POST"
     });
+
+    amplify.request.define("SearchLoad", "ajax", {
+        url: "/Admin/Document/SearchLoad",
+        dataType: "json",
+        type: "POST"
+    });
+
+    
     var DocumentModel = (function () {
         function DocumentModel() {
         }
+        DocumentModel.prototype.searchload = function (khvb, title, department, documenttype, type, organization, pageIndex, callback) {
+            amplify.request("SearchLoad", {
+                khvb: khvb, title: title, department: department, documenttype: documenttype,
+                organization: organization, type: type, pageIndex: pageIndex
+            }, function (result) {
+                callback(result);
+            });
+        };
         DocumentModel.prototype.search = function (name, page, pageSize, callback) {
             amplify.request("Search", { name: name, page: page, pageSize: pageSize }, function (result) {
                 callback(result);
             });
         };
-        DocumentModel.prototype.load = function (pageIndex, callback) {
-            amplify.request("Load", { pageIndex: pageIndex }, function (result) {
+        DocumentModel.prototype.load = function (pageIndex, type, callback) {
+            amplify.request("Load", { pageIndex: pageIndex, type: type }, function (result) {
                 callback(result);
             });
         };
@@ -45,8 +59,8 @@ define(["require", "exports", "amplify"], function (require, exports, amplify) {
                 callback(result);
             });
         };
-        DocumentModel.prototype.update = function (model, data, callback) {
-            amplify.request("Update", { model: model, data: data }, function (result) {
+        DocumentModel.prototype.update = function (model, callback) {
+            amplify.request("Update", model, function (result) {
                 callback(result);
             });
         };

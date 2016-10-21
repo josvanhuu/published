@@ -1,7 +1,6 @@
 //declare var naviactive: string;
 var NavigationViewModel = (function () {
     function NavigationViewModel() {
-        //naviactive: KnockoutObservable<string>;
         this.naviactive = ko.observable("document");
         this.selected = ko.observable(this.naviactive());
     }
