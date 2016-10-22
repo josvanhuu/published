@@ -21,8 +21,6 @@
             <td class="text-center" data-bind="text: $root.formatDate(DocumentDate)"></td>
             <!--/ko-->
             <td class="text-center">
-                @*<a data-bind="attr: { href: DocumentCode, title: DocumentCode }">View PDF</a>*@
-                @*href="http://docs.google.com/gview?url=https://partners.adobe.com/public/developer/en/xml/AdobeXMLFormsSamples.pdf&embedded=true"*@
                 <a data-original-title="View" data-placement="top" class="btn btn-sm btn-success tooltips" href="javascript:;" data-bind="click: $parent.view"><i class="fa fa-eye"></i></a>
                 @*<a data-original-title="Dowload" data-placement="top" class="btn btn-sm btn-success tooltips" href="javascript:;" data-bind="click: $parent.download"><i class="fa fa-download"></i></a>*@
                 <a data-original-title="Edit" data-placement="top" class="btn btn-sm btn-primary tooltips" href="javascript:;" data-bind="click: $parent.showEdit"><i class="fa fa-edit"></i></a>
@@ -30,11 +28,6 @@
             </td>
         </tr>
     </script>
-
-    <script type="text/template" id="documentfileTemplate">
-        @*<iframe data-bind="attr: { src: VituarlPath, title: Name }"></iframe>*@
-    </script>
-
 
     <script type="text/javascript">
         var naviactive = @ViewBag.type == 0 ? "document" : "documentto";
@@ -81,8 +74,9 @@
             </div>
 
         </div><!-- /.page-header -->
+        <div class="row" id="child-content"></div>
         <!-- PAGE CONTENT BEGINS -->
-        <div class="row">
+        <div class="row" id="main-content">
             <div class="col-xs-12">
                 <div class="table-header" data-bind="text: 'Danh sách ' + title">
                 </div>
@@ -159,7 +153,6 @@
 
                                     <div class="space-2"></div>
 
-                                    @*<div class="help-block" id="input-span-slider"></div>*@
                                 </div>
                             </div>
                             <div class="space-4"></div>
@@ -174,7 +167,6 @@
 
                                     <div class="space-2"></div>
 
-                                    @*<div class="help-block" id="input-span-slider"></div>*@
                                 </div>
                             </div>
                             <div class="space-4"></div>
@@ -257,7 +249,7 @@
                                                                 </td>
                                                                 <td class="text-right" data-bind="text: SizeString"></td>
                                                                 <td class="center">
-                                                                    <a href="javascript:;" class="btn btn-xs btn-bricky" @*data-bind="click: $root.removePosmAttachment"*@><i class="fa fa-times"></i></a>
+                                                                    <a href="javascript:;" class="btn btn-xs btn-bricky" data-bind="click: $root.removeFiles"><i class="fa fa-times"></i></a>
                                                                 </td>
                                                             </tr>
                                                             <!-- /ko -->
@@ -285,37 +277,9 @@
             </div>
         </div>
 
-        <!-- Modal Insert/Update Form -->
         <div class="modal fade" id="viewDocumentForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title" id="myModalLabel">Xem Công Văn</h4>
-                    </div>
-                    <div class="modal-body">
-                        <!-- ko foreach: filesview-->
-                        <p>
-                            <span data-bind="text: Name"> </span>
-                            <iframe data-bind="attr: { href: 'http://localhost:13869' + VituarlPath, title: Name }"></iframe>
-                        </p>
-                        <div class="space-4"></div>
-                        <!-- /ko -->
-                    </div>
-                    <div class="modal-footer">
-                        @*<button type="submit" class="btn btn-primary" data-bind="disable: isSending, click: save">
-                                <i class="fa fa-spinner fa-pulse" data-bind="visible: isSending"></i>
-                                <i class="fa fa-save" data-bind="visible: !isSending()"></i>&nbsp;
-                                Lưu
-                            </button>*@
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                    </div>
-                </div>
-            </div>
+            @Html.Partial("_DocumentView")
         </div>
-
     </div><!-- /.page-content -->
 </div>
 @*</div>*@<!-- /.main-content -->

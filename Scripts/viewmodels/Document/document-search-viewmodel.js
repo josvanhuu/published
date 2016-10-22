@@ -1,5 +1,8 @@
-define(["require", "exports", "jquery", "knockout", "toastr", "sweetalert", "../../models/document/document-model", "lodash", "moment", "jqueryPager", "resourceCommon"], function (require, exports, $, ko, toastr, swal, document_model_1, lodash, moment) {
+﻿define(["require", "exports", "jquery", "knockout", "toastr", "sweetalert", "../../models/document/document-model", "lodash", "moment", "jqueryPager", "resourceCommon"], function (require, exports, $, ko, toastr, swal, document_model_1, lodash, moment) {
     "use strict";
+
+    var type = [{ name: 'Công Văn Đến', id: 0 }, { name: 'Công Văn Đi', id: 1 }];
+
     function DocumentSeachViewModel() {
         var _this = this;
         _this.totalPage = 0;
@@ -13,8 +16,9 @@ define(["require", "exports", "jquery", "knockout", "toastr", "sweetalert", "../
         _this.listDocumentType = ko.observableArray(listdocumenttype);
         _this.listDepartment = ko.observableArray(listdepartment);
         _this.listDocumentSearch = ko.observableArray([]);
-        //_this.listUser = ko.observableArray(listuser);
         _this.listOrganization = ko.observableArray(listorganization);
+
+        _this.listType = ko.observableArray(type);
         
         _this.eid = ko.observable("");
         //Document Field
@@ -32,9 +36,10 @@ define(["require", "exports", "jquery", "knockout", "toastr", "sweetalert", "../
 
         _this.documenttype = ko.observable("");
         _this.documentdepartment = ko.observable("");
+        _this.documentorganization = ko.observable("");
 
-        _this.type = ko.observable(0);
-        //_this.organization = ko.observable("");
+        _this.type = ko.observable(2);
+        _this.organization = ko.observable("");
 
         _this.isFocusName = ko.observable(false);
         _this.isSending = ko.observable(false);
@@ -73,7 +78,7 @@ define(["require", "exports", "jquery", "knockout", "toastr", "sweetalert", "../
         _this.search = function (page) {
             _this.currentPage = page;
             _this.isSearching(true);
-            _this.model.searchload(_this.code(), _this.keyword(), _this.documentdepartment(), _this.documenttype(), 0, "", this.currentPage, function (data) {
+            _this.model.searchload(_this.code(), _this.keyword(), _this.documentdepartment(), _this.documenttype(), _this.type(), _this.organization(), this.currentPage, function (data) {
                 _this.isSearching(false);
                 _this.listDocumentSearch(data);
 
@@ -117,6 +122,28 @@ define(["require", "exports", "jquery", "knockout", "toastr", "sweetalert", "../
             return _.find(_this.listDepartment(), ['id', documentdepartment]).name;
         };
 
+        _this.type.subscribe((newValue) => {
+            _this.search(1);
+        });
+
+        _this.documenttype.subscribe((newValue) => {
+            _this.search(1);
+        });
+
+        _this.documentdepartment.subscribe((newValue) => {
+            _this.search(1);
+        });
+
+        _this.documentorganization.subscribe((newValue) => {
+            _this.search(1);
+        });
+
+        _this.exportExcel = function()
+        {
+            window.location.href = '/Document/ExportExcel/?khvb=' + _this.code() + '&title=' + _this.keyword() +
+                '&department=' + _this.documentdepartment() + '&documenttype=' + _this.documenttype() +
+                '&type=' + _this.type() + '&organization=' + _this.organization();
+        }
     }
     window.viewModel = new DocumentSeachViewModel();
     ko.applyBindings(window.viewModel, document.getElementById("page-content"));

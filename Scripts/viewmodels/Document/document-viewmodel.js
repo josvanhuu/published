@@ -11,6 +11,7 @@
         _this.keyword = ko.observable("");
         _this.isSearching = ko.observable(false);
         _this.isShowAddOrEdit = ko.observable(false);
+        _this.isShowView = ko.observable(0);
         _this.type = ko.observable();
 
         _this.listDocumentType = ko.observableArray([]);
@@ -24,6 +25,7 @@
         _this.eid = ko.observable("");
         _this.files = ko.observableArray([]);
         _this.filesview = ko.observableArray([]);
+        _this.thisdocument = ko.observableArray([]);
 
         //Document Field
         _this.documentcode = ko.observable("");
@@ -64,9 +66,24 @@
             _this.documentuser(item.DocumentUser);
             _this.documentorganization(item.DocumentOrganization);
             _this.documentdatesent(item.DocumentDateSent != null ? moment(item.DocumentDateSent).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD"));
+            //_this.files(item.ListDocument);
             _this.filesinput = item.ListDocument;
+
+            _this.files().length = 0;
+
+            for (var i = 0; i < item.ListDocument.length; i++)
+            {
+                var theFile = item.ListDocument[i];
+                _this.files.push(new FileModel(theFile.Name, theFile.VituarlPath, theFile.size, theFile.type));
+            }
+
             $("#addOrEditForm").modal('show');
         };
+
+        //_this.removeFiles = function() {
+        //    _this.files.splice(this);
+        //}
+
         _this.delete = function (item) {
             swal({
                 title: _this.common.stringFormat(window.resources.common.message.confirmDelete, _this.title),
@@ -136,17 +153,8 @@
         _this.fileSelect = function (elemet, event) {
             var files = event.target.files;// FileList object
             _this.filesinput = files;
-            //console.log(_this.filesinput);
-            //// Loop through the FileList and render image files as thumbnails.
             for (var i = 0, f; f = files[i]; i++) {
-
-                // Only process image files.
-                //if (!f.type.match('image.*')) {
-                //    continue;
-                //}
-
                 var reader = new FileReader();
-
                 // Closure to capture the file information.
                 reader.onload = (function (theFile) {
                     return function (e) {
@@ -242,13 +250,20 @@
 
         _this.view = function () {
             _this.filesview().length = 0;
+            _this.thisdocument().length = 0;            
             _this.filesview(this.ListDocument);
+            _this.thisdocument(this);            
+            _this.isShowView(1);
             console.log(_this.filesview());
             $("#viewDocumentForm").modal('show');
         };
 
         $("#viewDocumentForm").on("hidden", function () {
             _this.filesview().length = 0;
+        });
+
+        $("#addOrEditForm").on("hidden", function () {
+            _this.resetForm();
         });
 
         var ViewFileModel = function (name, src, size, format) {
@@ -260,8 +275,21 @@
         };
 
         _this.resetForm = function () {
+            _this.isAdd(false);
             _this.eid("");
-            _this.name("");
+            _this.documentcode("");
+            _this.documentname("");
+            _this.documentdes("");
+            _this.documentdate("");
+            _this.documentdateaction("");
+            _this.documenttype("");
+            _this.documentdepartment("");
+            _this.documentuser("");
+            _this.documentorganization("");
+            _this.documentdatesent("");
+            _this.filesinput = "";
+            _this.files().length = 0;
+            
             //setTimeout(() => { _this.isFocusName(true); }, 100);
         };
 

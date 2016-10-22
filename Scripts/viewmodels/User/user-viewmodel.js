@@ -1,5 +1,8 @@
 define(["require", "exports", "jquery", "knockout", "toastr", "sweetalert", "lodash", "../../common/common", "../../models/user/user-model", "jqueryPager", "resourceCommon"], function (require, exports, $, ko, toastr, swal, lodash, common_1, user_model_1) {
     "use strict";
+
+    var userRoles = [{ name: 'Admin', id: 'admin' }, { name: 'User', id: 'user' }];
+
     function UserViewModel() {
         var _this = this;
         _this.totalPage = 0;
@@ -11,6 +14,7 @@ define(["require", "exports", "jquery", "knockout", "toastr", "sweetalert", "lod
         _this.listdeparments = ko.observableArray([]);
         _this.listUsers = ko.observableArray([]);
         _this.listDeparments = ko.observableArray([]);
+        _this.listUserRoles = ko.observableArray(userRoles);
         _this.title = " 'Người Dùng' ";
         _this.eid = ko.observable("");
         _this.username = ko.observable("");
@@ -23,6 +27,7 @@ define(["require", "exports", "jquery", "knockout", "toastr", "sweetalert", "lod
         _this.position = ko.observable("");
         _this.image = ko.observable("");
         _this.phone = ko.observable("");
+        _this.role = ko.observable("");
         _this.isFocusName = ko.observable(false);
         _this.isSending = ko.observable(false);
         _this.isAdd = ko.observable(false);
@@ -42,6 +47,7 @@ define(["require", "exports", "jquery", "knockout", "toastr", "sweetalert", "lod
             _this.membercode(item.MemberCode);
             _this.address(item.Address);
             _this.position(item.Position);
+            _this.role(item.Roles[0].RoleName)
             _this.image("");
             _this.phone(item.Phone);
             _this.isAdd(false);
@@ -110,7 +116,7 @@ define(["require", "exports", "jquery", "knockout", "toastr", "sweetalert", "lod
             _this.model.update({
                 eid: _this.eid(), username: _this.username(), password: _this.password(), fullname: _this.fullname(),
                 email: _this.email(), department: _this.department(), membercode: _this.membercode(), address: _this.address(),
-                position: _this.position(), image: _this.image(), phone: _this.phone()
+                position: _this.position(), image: _this.image(), phone: _this.phone(), role: _this.role()
             }, function (data) {
                 _this.isSending(false);
                 if ($.isArray(data)) {

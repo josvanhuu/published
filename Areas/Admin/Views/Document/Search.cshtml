@@ -49,86 +49,67 @@
             <div class="page-header">
                 <div class="clearfix">
                     <div class="widget-box">
-                        @*<div class="widget-header">
-                                <h4 class="widget-title">Default</h4>
-                            </div>*@
-
                         <div class="widget-body">
                             <div class="widget-main no-padding">
-
                                 <form data-bind="submit: FormSearch" class="form-search form-inline" role="form">
                                     <fieldset>
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <div class="input-group col-md-12">
-
-                                                <input type="text" data-bind="value: code" class="form-control search-query" placeholder="Kí hiệu">
-                                                <span class="input-group-btn">
-                                                    <button type="submit" class="btn btn-purple btn-sm">
-                                                        <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
-                                                    </button>
-                                                </span>
+                                                <select data-bind="value: type, options: listType, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Lựa Chọn'" class="form-control"></select>
                                             </div>
                                             <hr>
                                         </div>
-                                        
-                                        <div class="col-md-3">
+
+                                        <div class="col-md-4">
+                                            <div class="input-group col-md-12">
+                                                <input type="text" data-bind="value: code" class="form-control search-query" placeholder="Kí hiệu">
+                                            </div>
+                                            <hr>
+                                        </div>
+
+                                        <div class="col-md-4">
                                             <div class="input-group col-md-12">
                                                 <input type="text" data-bind="value: keyword" class="form-control search-query" placeholder="Từ khóa">
-                                                <span class="input-group-btn">
-                                                    <button type="submit" class="btn btn-purple btn-sm">
-                                                        <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
-                                                    </button>
-                                                </span>
                                             </div>
                                             <hr>
                                         </div>
-                                        
-                                        <div class="col-md-3">
+
+                                        <div class="col-md-4">
                                             <div class="input-group col-md-12">
                                                 <select data-bind="value: documenttype, options: listDocumentType, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn loại Văn Bản'" class="form-control" id="form-field-select-1"></select>
                                             </div>
                                             <hr>
                                         </div>
-                                        
-                                        <div class="col-md-3">
+
+                                        <div class="col-md-4">
                                             <div class="input-group col-md-12">
                                                 <select data-bind="value: documentdepartment, options: listDepartment, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn phòng ban'" class="form-control"></select>
                                             </div>
                                             <hr>
                                         </div>
 
-                                        @*<div class="col-md-3">
+                                        <div class="col-md-4">
                                             <div class="input-group col-md-12">
-                                                <select data-bind="value: documentdepartment, options: listDepartment, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn phòng ban'" class="form-control"></select>
+                                                <select data-bind="value: documentorganization, options: listOrganization, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn Cơ Quan Ban Hành'" class="form-control"></select>
                                             </div>
                                             <hr>
                                         </div>
 
-                                        <div class="col-md-3">
-                                            <div class="input-group col-md-12">
-                                                <select data-bind="value: documentdepartment, options: listDepartment, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn phòng ban'" class="form-control"></select>
-                                            </div>
-                                            <hr>
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-purple">
+                                                <span class="ace-icon fa fa-search icon-on-right bigger-110"></span> Tìm kiếm
+                                            </button>
+
+                                            <button type="button" data-bind="click: exportExcel" class="btn btn-success">
+                                                <span class="ace-icon fa fa-file-excel-o icon-on-right bigger-110"></span> Xuất Excel
+                                            </button>
                                         </div>
-
-                                        <div class="col-md-3">
-                                            <div class="input-group col-md-12">
-                                                <select data-bind="value: documentdepartment, options: listDepartment, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn phòng ban'" class="form-control"></select>
-                                            </div>
-                                            <hr>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <div class="input-group col-md-12">
-                                                <select data-bind="value: documentdepartment, options: listDepartment, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Chọn phòng ban'" class="form-control"></select>
-                                            </div>
-                                            <hr>
-                                        </div>*@
-
                                     </fieldset>
                                 </form>
+
                             </div>
                         </div>
+
                     </div>
 
                 </div>

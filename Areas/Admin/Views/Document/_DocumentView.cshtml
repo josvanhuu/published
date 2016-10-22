@@ -1,0 +1,19 @@
+﻿<div class="modal-dialog modal-lg" role="document">
+    <!-- ko foreach: $root.thisdocument-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel" data-bind="text: DocumentName"></h4>
+        </div>
+        <div class="modal-body">
+            <!-- ko foreach: $root.filesview-->
+            <embed data-bind="attr: { src: 'http://localhost:13869' + VituarlPath}" width="870" height="500" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
+            <!--/ko-->
+        </div>
+    </div>
+    <!--/ko-->
+</div>
+
+
